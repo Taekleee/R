@@ -1,6 +1,33 @@
 library(planoCH)
 library(stringr)
 
+# Authors : Catalina Andrea Morales Rojas
+#           Juan Antonio Fernández Muñoz
+
+# Version : V0.1
+
+# Year    : 2020 
+
+# ============================================================= #
+# This script has the goal of apply multiple tools to compute   #
+# statistical complexity measures (SCM) in the way of C = QxH   #
+# (where C is complexity, Q is Desiquilibrium and H is Entropy  #
+# from csv format files containing different types of cerebral  #
+# blood pressure measures in different types of patients.       #
+# ============================================================= #
+
+
+# ---------------------- Functions ---------------------- 
+
+# Description: This function open a group of .csv files located 
+#              in a certain folder using the folder path 
+#              (example: home/user/documents/folder), then, 
+#              calls a function named "cols" which apply
+#              different tools to compute Desiquilibrium 
+#              values. Then, write the results in new csv files.
+
+# Input: Path of the folder with .csv files with data to analyze.
+
 open.files <- function(
   path
 )
@@ -10,10 +37,15 @@ open.files <- function(
   data <- lapply(X=files,FUN = function(m) df <- read.csv(m, header = TRUE, sep = ",",quote = "\"",,fill=T))
   results<- lapply(X= data, cols)
   write.files(results,files)
- 
-  
 }
   
+
+
+# Description: This function calculate the different types of Desiquilibrium
+#              from a given .csv file of the folder.
+
+# Input: File to be analyzed.
+
 cols<-function(
   file
 ){
@@ -113,6 +145,14 @@ cols<-function(
   data
 }
 
+
+
+# Description: This function write the results of the different 
+#             Desiquilibriums of an input csv file, in an output
+#             csv file.
+
+# Input: Data set with the values of the input csv file and the name
+#        the output csv file.
 write.files<- function(
   data,
   files
