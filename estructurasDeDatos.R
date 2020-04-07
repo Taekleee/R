@@ -4,7 +4,7 @@
 #
 #FILAS: representan casos
 #COLUMNAS: representan atributos
-#
+#(El ejemplo se encuentra en formato largo)
 
 ejemplo_dataframe <- data.frame(
   "Edad" = c(20,21,22,23,24),
