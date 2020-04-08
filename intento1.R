@@ -9,10 +9,8 @@ open.files <- function(
   files<-(list.files())
   data <- lapply(X=files,FUN = function(m) df <- read.csv(m, header = TRUE, sep = ",",quote = "\"",,fill=T))
   results<- lapply(X= data, cols)
-  files
-  #print(results)
-  #write.csv(results, file = "Ejemplo1.csv", row.names = FALSE)
-  #a<- lapply(X=results, FUN = function(m) df<-write.csv(m, file = "Ejemplo1.csv", row.names = FALSE))
+  write.files(results,files)
+ 
   
 }
   
@@ -121,9 +119,7 @@ write.files<- function(
 ){
   ifelse(!dir.exists("../Resultados"),dir.create("../Resultados"),print("La carpeta ya existe"))
   setwd("../Resultados")
-  print(length(data))
-  for(i in length(data)){
-    print(i)
+  for(i in 1:length(data)){
     print("Escribiendo archivos...")
     write.csv(data[i], file = str_c(files[i],".csv"), row.names = FALSE)
   }
