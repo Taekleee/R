@@ -1,14 +1,19 @@
 library(planoCH)
+library(stringr)
 
 open.files <- function(
   path
 )
 {
   setwd(path)
-  files<-as.vector(list.files())
+  files<-(list.files())
   data <- lapply(X=files,FUN = function(m) df <- read.csv(m, header = TRUE, sep = ",",quote = "\"",,fill=T))
   results<- lapply(X= data, cols)
-  print(results)
+  files
+  #print(results)
+  #write.csv(results, file = "Ejemplo1.csv", row.names = FALSE)
+  #a<- lapply(X=results, FUN = function(m) df<-write.csv(m, file = "Ejemplo1.csv", row.names = FALSE))
+  
 }
   
 cols<-function(
@@ -19,8 +24,37 @@ cols<-function(
   q = 1/2
   beta <- 1/2
   eu = NULL 
-  e1 = NULL
   edu = NULL
+  hu = NULL
+  hdu = NULL
+  wu = NULL
+  wdu = NULL
+  shu = NULL
+  shdu = NULL
+  ru = NULL
+  rdu = NULL
+  tu = NULL
+  tdu = NULL
+  jsu = NULL
+  jsdu = NULL
+  jsdu = NULL
+  js2u = NULL
+  js2du = NULL
+  jru = NULL
+  jrdu = NULL
+  jr2u = NULL
+  jr2du = NULL
+  jtu = NULL
+  jtdu = NULL
+  jt2u = NULL 
+  jt2du = NULL
+  jgu = NULL
+  jgdu = NULL
+  jgu = NULL
+  jgdu = NULL
+  jg2u = NULL
+  jg2du = NULL
+
   for(i in 1:ncol(file)){
     result<-file[,i][complete.cases(file[,i])]
     n = length(result)
@@ -28,52 +62,70 @@ cols<-function(
     Cm <- c(1, rep(0, n - 1))
     
     eu[i] <- get.euclidean.distance.to.uniform(result)
-    aux <-get.euclidean.disequilibrium.to.uniform(result)
-    edu[i] <- as.numeric(aux[3])
+    edu[i] <- as.numeric( get.euclidean.disequilibrium.to.uniform(result)[3])
     
-    hu <- get.hellinger.distance.to.uniform(result)
-    hdu <- get.hellinger.disequilibrium.to.uniform(result)
+    hu[i] <- get.hellinger.distance.to.uniform(result)
+    hdu[i] <- as.numeric(get.hellinger.disequilibrium.to.uniform(result)[3])
 
-    wu <- get.wootters.distance.to.uniform(result)
-    wdu <- get.wootters.disequilibrium.to.uniform(result)
+    wu[i] <- get.wootters.distance.to.uniform(result)
+    wdu[i] <- as.numeric(get.wootters.disequilibrium.to.uniform(result)[3])
 
-    shu <- get.KLS.distance.to.uniform(result)
-    shdu <- get.KLS.disequilibrium.to.uniform(result)
+    shu[i] <- get.KLS.distance.to.uniform(result)
+    shdu[i] <- as.numeric(get.KLS.disequilibrium.to.uniform(result)[3])
 
 
-    ru <- get.KLR.distance.to.uniform(result, q = q)
-    rdu <- get.KLR.disequilibrium.to.uniform(result, q = q)
+    ru[i] <- get.KLR.distance.to.uniform(result, q = q)
+    rdu[i] <- as.numeric(get.KLR.disequilibrium.to.uniform(result, q = q)[3])
 
-    tu <- get.KLT.distance.to.uniform(result, q = q)
-    tdu <- get.KLT.disequilibrium.to.uniform(result, q = q)
+    tu[i] <- get.KLT.distance.to.uniform(result, q = q)
+    tdu[i] <- as.numeric(get.KLT.disequilibrium.to.uniform(result, q = q)[3])
 
-    jsu <- get.jensen.divergence.to.uniform(result, disorder.fun = get.shannon.disorder)
-    jsdu <- get.JS.disequilibrium.to.uniform(result)
+    jsu[i] <- get.jensen.divergence.to.uniform(result, disorder.fun = get.shannon.disorder)
+    jsdu[i] <- as.numeric(get.JS.disequilibrium.to.uniform(result)[3])
 
-    js2u <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.shannon.disorder)
-    js2du <- get.JS.disequilibrium.to.uniform(result, beta = 2/3)
+    js2u[i] <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.shannon.disorder)
+    js2du[i] <- as.numeric(get.JS.disequilibrium.to.uniform(result, beta = 2/3)[3])
 
-    jru <- get.jensen.divergence.to.uniform(result, disorder.fun = get.renyi.disorder, q = q)
-    jrdu <- get.JR.disequilibrium.to.uniform(result, q = q)
+    jru[i] <- get.jensen.divergence.to.uniform(result, disorder.fun = get.renyi.disorder, q = q)
+    jrdu[i] <- as.numeric(get.JR.disequilibrium.to.uniform(result, q = q)[3])
 
-    jr2u <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.renyi.disorder, q = q)
-    jr2du <- get.JR.disequilibrium.to.uniform(result, beta = 2/3, q = q)
+    jr2u[i] <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.renyi.disorder, q = q)
+    jr2du[i] <- as.numeric(get.JR.disequilibrium.to.uniform(result, beta = 2/3, q = q)[3])
 
-    jtu <- get.jensen.divergence.to.uniform(result, disorder.fun = get.tsallis.disorder, q = q)
-    jtdu <- get.JT.disequilibrium.to.uniform(result, q = q)
+    jtu[i] <- get.jensen.divergence.to.uniform(result, disorder.fun = get.tsallis.disorder, q = q)
+    jtdu[i] <- as.numeric(get.JT.disequilibrium.to.uniform(result, q = q)[3])
 
-    jt2u <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.tsallis.disorder, q = q)
-    jt2du <- get.JT.disequilibrium.to.uniform(result, beta = 2/3, q = q)
+    jt2u[i] <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.tsallis.disorder, q = q)
+    jt2du[i] <-as.numeric(get.JT.disequilibrium.to.uniform(result, beta = 2/3, q = q)[3])
 
-    jgu <- get.jensen.divergence.to.uniform(result, disorder.fun = get.escort.tsallis.disorder, q = q)
-    jgdu <- get.JG.disequilibrium.to.uniform(result, q = q)
+    jgu[i] <- get.jensen.divergence.to.uniform(result, disorder.fun = get.escort.tsallis.disorder, q = q)
+    jgdu[i] <- as.numeric(get.JG.disequilibrium.to.uniform(result, q = q)[3])
 
-    jg2u <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.escort.tsallis.disorder, q = q)
-    jg2du <- get.JG.disequilibrium.to.uniform(result, beta = 2/3, q = q)
-
+    jg2u[i] <- get.jensen.divergence.to.uniform(result, beta = 2/3, disorder.fun = get.escort.tsallis.disorder, q = q)
+    jg2du[i] <- as.numeric(get.JG.disequilibrium.to.uniform(result, beta = 2/3, q = q)[3])
   }
   
-  a <- data.frame(
-    "eu" = eu,
-    "edu-D" = edu)
+  data <- data.frame(
+    "eu" = eu, "edu - Q" = edu, "hu" = hu, "hdu - Q" = hdu, "wu" = wu, "wdu - Q" = wdu, "shu" = shu, "shdu - Q" = shdu, "ru" = ru,
+    "rdu - Q" = rdu, "tu" = tu, "tdu - Q" = tdu, "jsu" = jsu, "jsdu - Q" = jsdu, "js2u" = js2u, "js2du - Q" = js2du, "jru" = jru,
+    "jrdu - Q" = jrdu, "jr2u" = jr2u, "jr2du - Q" = jr2u, "jtu" = jtu, "jtdu - Q" = jtdu, "jt2u" = jt2u, "jt2du - Q" = jt2du, "jgu" = jgu,
+    "jgdu - Q" = jgdu, "jgu" = jgu, "jgdu - Q" = jgdu, "jg2u" = jg2u, "jg2du - Q" = jg2du
+     )
+
+  data
+}
+
+write.files<- function(
+  data,
+  files
+){
+  ifelse(!dir.exists("../Resultados"),dir.create("../Resultados"),print("La carpeta ya existe"))
+  setwd("../Resultados")
+  print(length(data))
+  for(i in length(data)){
+    print(i)
+    print("Escribiendo archivos...")
+    write.csv(data[i], file = str_c(files[i],".csv"), row.names = FALSE)
+  }
+  print("Terminado")
 }
