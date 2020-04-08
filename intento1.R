@@ -1,6 +1,7 @@
 library(planoCH)
 library(stringr)
-
+q = c(0.5,1.5,2,2.5)
+j = 1
 # Authors : Catalina Andrea Morales Rojas
 #           Juan Antonio Fernández Muñoz
 
@@ -33,10 +34,15 @@ open.files <- function(
 )
 {
   setwd(path)
+  print(q)
   files<-(list.files())
   data <- lapply(X=files,FUN = function(m) df <- read.csv(m, header = TRUE, sep = ",",quote = "\"",,fill=T))
-  results<- lapply(X= data, cols)
-  write.files(results,files)
+  
+  for(i in 1:length(q)){
+    results<- lapply(X= data, cols)
+    write.files(results,files)
+    j<<- j + 1
+  }
 }
   
 
@@ -50,8 +56,7 @@ cols<-function(
   file
 ){
   #alpha = q
-  #q = c(0.5,1,1.5,2,2.5)
-  q = 1/2
+  q = q[j]
   beta <- 1/2
   eu = NULL 
   edu = NULL
@@ -161,7 +166,7 @@ write.files<- function(
   setwd("../Resultados")
   for(i in 1:length(data)){
     print("Escribiendo archivos...")
-    write.csv(data[i], file = str_c(files[i],".csv"), row.names = FALSE)
+    write.csv(data[i], file = str_c(files[i],q[j],".csv"), row.names = FALSE)
   }
   print("Terminado")
 }
