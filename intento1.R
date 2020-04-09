@@ -1,5 +1,7 @@
 library(planoCH)
 library(stringr)
+library(statcomp)
+
 q = c(0.5,1.5,2,2.5)
 j = 1
 # Authors : Catalina Andrea Morales Rojas
@@ -34,15 +36,14 @@ open.files <- function(
 )
 {
   setwd(path)
-  print(q)
   files<-(list.files())
   data <- lapply(X=files,FUN = function(m) df <- read.csv(m, header = TRUE, sep = ",",quote = "\"",,fill=T))
-  
   for(i in 1:length(q)){
     results<- lapply(X= data, cols)
     write.files(results,files)
     j<<- j + 1
   }
+  print("Terminado")
 }
   
 
@@ -53,7 +54,7 @@ open.files <- function(
 # Input: File to be analyzed.
 
 cols<-function(
-  file
+  signal
 ){
   #alpha = q
   q = q[j]
@@ -90,8 +91,10 @@ cols<-function(
   jg2u = NULL
   jg2du = NULL
 
-  for(i in 1:ncol(file)){
-    result<-file[,i][complete.cases(file[,i])]
+  for(i in 1:ncol(signal)){
+    result<-signal[,i][complete.cases(signal[,i])]
+    emb.dim<- round(log(length(signal)))
+    result <- ordinal_pattern_distribution(x = result, ndemb = emb.dim)
     n = length(result)
     Ce <- rep(1, n)
     Cm <- c(1, rep(0, n - 1))
@@ -141,6 +144,7 @@ cols<-function(
   }
   
   data <- data.frame(
+    colnames(signal),
     "eu" = eu, "edu - Q" = edu, "hu" = hu, "hdu - Q" = hdu, "wu" = wu, "wdu - Q" = wdu, "shu" = shu, "shdu - Q" = shdu, "ru" = ru,
     "rdu - Q" = rdu, "tu" = tu, "tdu - Q" = tdu, "jsu" = jsu, "jsdu - Q" = jsdu, "js2u" = js2u, "js2du - Q" = js2du, "jru" = jru,
     "jrdu - Q" = jrdu, "jr2u" = jr2u, "jr2du - Q" = jr2u, "jtu" = jtu, "jtdu - Q" = jtdu, "jt2u" = jt2u, "jt2du - Q" = jt2du, "jgu" = jgu,
@@ -164,9 +168,20 @@ write.files<- function(
 ){
   ifelse(!dir.exists("../Resultados"),dir.create("../Resultados"),print("La carpeta ya existe"))
   setwd("../Resultados")
+  print("Escribiendo archivos...")
   for(i in 1:length(data)){
-    print("Escribiendo archivos...")
-    write.csv(data[i], file = str_c(files[i],q[j],".csv"), row.names = FALSE)
+    names<-strsplit(files[i],"-")
+    result<-cbind(data.frame(rep(names[[1]][[1]],length(data[i])),rep(names[[1]][[2]],length(data[i])),rep(names[[1]][[3]],length(data[i])),rep(names[[1]][[4]],length(data[i])) ),data[i])
+    if(i == 1){
+      write.table(result, file = str_c("Resultados-q",q[j],".csv"),append = FALSE, row.names = FALSE, col.names = TRUE)
+    }
+    
+    write.table(result, file = str_c("Resultados-q",q[j],".csv"),append = TRUE, row.names = FALSE, col.names = FALSE)
+    #rbind()
   }
-  print("Terminado")
+  
+  result
 }
+
+
+
